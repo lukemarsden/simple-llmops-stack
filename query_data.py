@@ -1,9 +1,10 @@
 import os
 from dotenv import load_dotenv
-from llama_index.core import VectorStoreIndex, ServiceContext
+from llama_index.core import VectorStoreIndex, Settings
 from llama_index.vector_stores.postgres import PGVectorStore
 from llama_index.core.storage.storage_context import StorageContext
 from llama_index.llms.ollama import Ollama
+from llama_index.embeddings.ollama import OllamaEmbedding
 
 # Load environment variables from .env file
 load_dotenv()
@@ -22,23 +23,25 @@ vector_store = PGVectorStore.from_params(
     port=DB_PORT,
     user=DB_USER,
     password=DB_PASS,
-    table_name="document_vectors"
+    table_name="document_embeddings",
+    embed_dim=4096,  # Llama 3.1 embedding dimension
 )
 
 # Create a storage context
 storage_context = StorageContext.from_defaults(vector_store=vector_store)
 
-# Initialize Ollama LLM
+# Initialize Ollama LLM and embedding model
 llm = Ollama(model="llama3.1:8b")
+embed_model = OllamaEmbedding(model_name="llama3.1:8b")
 
-# Create a service context with the Ollama LLM
-service_context = ServiceContext.from_defaults(llm=llm)
+# Update global settings
+Settings.llm = llm
+Settings.embed_model = embed_model
 
 # Load the index from the vector store
 index = VectorStoreIndex.from_vector_store(
     vector_store,
     storage_context=storage_context,
-    service_context=service_context
 )
 
 # Create a query engine
