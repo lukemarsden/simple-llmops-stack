@@ -54,6 +54,7 @@ This guide will walk you through setting up a simple LLMOps stack on an Ubuntu m
    ```
    docker run --name pgvector -e POSTGRES_PASSWORD=$DB_PASSWORD -p $DB_PORT:5432 -d ankane/pgvector
    ```
+   Warning: data will be ephemeral.
 
 4. Verify the container is running:
    ```

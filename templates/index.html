@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Embeddings Table</title>
+    <meta http-equiv="refresh" content="30">
     <style>
         table {
             border-collapse: collapse;
@@ -23,24 +24,37 @@
     </style>
 </head>
 <body>
+    <h1>Database Tables</h1>
+    <ul>
+        {% for table in tables %}
+            <li>{{ table.table_name }}</li>
+        {% endfor %}
+    </ul>
+
     <h1>Embeddings Table</h1>
+    {% if rows %}
     <table>
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Content</th>
                 <th>Metadata</th>
+                <th>Timestamp</th>
             </tr>
         </thead>
         <tbody>
             {% for row in rows %}
             <tr>
                 <td>{{ row.id }}</td>
-                <td>{{ row.content[:100] }}...</td>
-                <td>{{ row.metadata }}</td>
+                <td>{{ row.text[:100] }}...</td>
+                <td>{{ row.metadata_ }}</td>
+                <td>{{ row.timestamp }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    {% else %}
+    <p>No data available or error occurred.</p>
+    {% endif %}
 </body>
 </html>

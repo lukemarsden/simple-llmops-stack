@@ -22,11 +22,32 @@ def get_db_connection():
 def index():
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-    cur.execute('SELECT id, content, metadata FROM documents LIMIT 100;')
-    rows = cur.fetchall()
+    
+    # List all tables in the database
+    cur.execute("""
+        SELECT table_name 
+        FROM information_schema.tables 
+        WHERE table_schema = 'public'
+    """)
+    tables = cur.fetchall()
+    print("Tables in the database:", [table['table_name'] for table in tables])
+    
+    try:
+        cur.execute('''
+            SELECT id, text, metadata_, 
+            (metadata_->>'timestamp')::timestamp as timestamp 
+            FROM data_document_embeddings 
+            ORDER BY (metadata_->>'timestamp')::timestamp DESC 
+            LIMIT 100;
+        ''')
+        rows = cur.fetchall()
+    except psycopg2.Error as e:
+        print("Error:", e)
+        rows = []
+    
     cur.close()
     conn.close()
-    return render_template('index.html', rows=rows)
+    return render_template('index.html', rows=rows, tables=tables)
 
 if __name__ == '__main__':
     app.run(debug=True)

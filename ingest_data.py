@@ -6,6 +6,7 @@ from llama_index.vector_stores.postgres import PGVectorStore
 from llama_index.core.storage.storage_context import StorageContext
 from llama_index.readers.web import SimpleWebPageReader
 from llama_index.embeddings.ollama import OllamaEmbedding
+from datetime import datetime
 
 # Load environment variables from .env file
 load_dotenv()
@@ -44,6 +45,10 @@ def ingest_data(url):
     # Load documents from the provided URL
     documents = SimpleWebPageReader(html_to_text=True).load_data([url])
 
+    # Add timestamp to each document
+    for doc in documents:
+        doc.metadata["timestamp"] = datetime.now().isoformat()
+
     # Create an index from the documents
     index = VectorStoreIndex.from_documents(
         documents,
@@ -51,6 +56,7 @@ def ingest_data(url):
     )
 
     print(f"Data from {url} has been successfully ingested and stored in the database.")
+    print(f"Table name: {vector_store.table_name}")  # Add this line to print the actual table name
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
