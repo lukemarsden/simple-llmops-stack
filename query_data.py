@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from llama_index.core import VectorStoreIndex, ServiceContext
-from llama_index.core.vector_stores import PGVectorStore
+from llama_index.vector_stores.postgres import PGVectorStore
 from llama_index.core.storage.storage_context import StorageContext
 from llama_index.llms import Ollama
 
