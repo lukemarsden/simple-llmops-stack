@@ -87,3 +87,15 @@ This guide will walk you through setting up a simple LLMOps stack on an Ubuntu m
    python query_data.py
    ```
 
+## Starting the Embedding Explorer Application
+1. Ensure you're in the project root directory and your virtual environment is activated.
+
+2. Start the Flask web application in a separate terminal:
+   ```bash
+   python app.py
+   ```
+
+3. Open a web browser and navigate to `http://localhost:5000` to view the web interface.
+
+The web application provides a simple interface to view the ingested data stored in the pgvector database. It displays a list of the most recent documents, including their text content and metadata. This allows you to easily verify that your data ingestion process is working correctly and explore the stored information.
+
