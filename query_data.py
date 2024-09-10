@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from llama_index.core import VectorStoreIndex, ServiceContext
 from llama_index.vector_stores.postgres import PGVectorStore
 from llama_index.core.storage.storage_context import StorageContext
-from llama_index.llms import Ollama
+from llama_index.llms.ollama import Ollama
 
 # Load environment variables from .env file
 load_dotenv()
