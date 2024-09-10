@@ -92,6 +92,7 @@ This guide will walk you through setting up a simple LLMOps stack on an Ubuntu m
 
 2. Start the Flask web application in a separate terminal:
    ```bash
+   source llmops_env/bin/activate
    python app.py
    ```
 

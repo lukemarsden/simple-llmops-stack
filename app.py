@@ -3,6 +3,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import os
 from dotenv import load_dotenv
+import base64
 
 load_dotenv()
 
@@ -41,6 +42,8 @@ def index():
             LIMIT 100;
         ''')
         rows = cur.fetchall()
+        for row in rows:
+            row['text_b64'] = base64.b64encode(row['text'].encode()).decode()
     except psycopg2.Error as e:
         print("Error:", e)
         rows = []
