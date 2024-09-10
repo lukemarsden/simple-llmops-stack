@@ -1,1 +1,94 @@
 # simple-llmops-stack
+
+This guide will walk you through setting up a simple LLMOps stack on an Ubuntu machine.
+
+<!-- TODO: re-add TOC when done -->
+
+## Prerequisites
+- Ubuntu machine with an NVIDIA GPU
+- Sudo access
+- [Docker setup](https://docs.docker.com/engine/install/ubuntu/) completed
+- [NVIDIA docker runtime](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker) installed
+
+## Setting up Environment Variables
+1. Create a `.env` file in the project root directory:
+   ```bash
+   touch .env
+   ```
+
+2. Add the following content to the `.env` file:
+   ```
+   DB_NAME=postgres
+   DB_USER=postgres
+   DB_PASSWORD=mysecretpassword
+   DB_HOST=localhost
+   DB_PORT=5432
+   ```
+
+3. Install the python-dotenv package:
+   ```bash
+   pip install python-dotenv
+   ```
+
+## Setting up NVIDIA Drivers
+1. Check if NVIDIA drivers are installed and working:
+   ```
+   docker run --rm --gpus all nvidia/cuda:11.0-base nvidia-smi
+   ```
+
+## Installing Ollama
+1. Run the Ollama installation one-liner:
+   ```
+   curl https://ollama.ai/install.sh | sh
+   ```
+2. Pull the Llama 3.1 model:
+   ```
+   ollama pull llama3.1:8b
+   ```
+3. Check that you can talk to the model interactively:
+   ```
+   ollama run llama3.1:8b
+   ```
+   This will start an interactive session with the Llama 3.1 model. Say hi, then exit.
+
+
+## Adding pgvector
+2. Pull the pgvector Docker image:
+   ```
+   docker pull ankane/pgvector
+   ```
+
+3. Start a pgvector container:
+   ```
+   docker run --name pgvector -e POSTGRES_PASSWORD=$DB_PASSWORD -p $DB_PORT:5432 -d ankane/pgvector
+   ```
+
+4. Verify the container is running:
+   ```
+   docker ps
+   ```
+
+## Using LlamaIndex to Ingest Data
+1. Set up a Python environment and install LlamaIndex:
+   ```bash
+   # Create a virtual environment
+   python3 -m venv llmops_env
+
+   # Activate the virtual environment
+   source llmops_env/bin/activate
+
+   # Install LlamaIndex and its dependencies
+   pip install llama-index pgvector psycopg2-binary
+   ```
+
+2. Run the ingestion script:
+   ```
+   python ingest_data.py <URL>
+   ```
+
+## Demo: Querying the Ingested Data
+1. Run the demo script:
+   ```
+   python query_data.py
+   ```
+
