@@ -9,6 +9,13 @@ This guide will walk you through setting up a simple LLMOps stack on an Ubuntu m
 - Sudo access
 - [Docker setup](https://docs.docker.com/engine/install/ubuntu/) completed
 
+## Clone this repo
+
+```
+git clone https://github.com/lukemarsden/simple-llmops-stack
+cd simple-llmops-stack
+```
+
 ## Installing Ollama
 1. Run the Ollama installation one-liner:
    ```
