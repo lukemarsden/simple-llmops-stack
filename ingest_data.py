@@ -1,14 +1,16 @@
 import sys
 import os
 from dotenv import load_dotenv
-from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
+from llama_index.core import VectorStoreIndex, Settings
 from llama_index.vector_stores.postgres import PGVectorStore
 from llama_index.core.storage.storage_context import StorageContext
+from llama_index.readers.web import SimpleWebPageReader
+from llama_index.embeddings.ollama import OllamaEmbedding
 
 # Load environment variables from .env file
 load_dotenv()
 
-def ingest_data(data_path):
+def ingest_data(url):
     # Get database connection details from environment variables
     db_name = os.getenv('DB_NAME')
     db_user = os.getenv('DB_USER')
@@ -21,6 +23,10 @@ def ingest_data(data_path):
         print("Error: One or more required environment variables are not set.")
         sys.exit(1)
 
+    # Set up Ollama embedding
+    embed_model = OllamaEmbedding(model_name="llama3.1:8b")
+    Settings.embed_model = embed_model
+
     # Create a PGVectorStore instance
     vector_store = PGVectorStore.from_params(
         database=db_name,
@@ -29,14 +35,14 @@ def ingest_data(data_path):
         port=db_port,
         user=db_user,
         table_name="document_embeddings",
-        embed_dim=1536,  # OpenAI embedding dimension
+        embed_dim=4096,  # Llama 3.1 embedding dimension
     )
 
     # Create a storage context
     storage_context = StorageContext.from_defaults(vector_store=vector_store)
 
-    # Load documents from the provided path
-    documents = SimpleDirectoryReader(data_path).load_data()
+    # Load documents from the provided URL
+    documents = SimpleWebPageReader(html_to_text=True).load_data([url])
 
     # Create an index from the documents
     index = VectorStoreIndex.from_documents(
@@ -44,12 +50,12 @@ def ingest_data(data_path):
         storage_context=storage_context,
     )
 
-    print(f"Data from {data_path} has been successfully ingested and stored in the database.")
+    print(f"Data from {url} has been successfully ingested and stored in the database.")
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python ingest_data.py <data_path>")
+        print("Usage: python ingest_data.py <URL>")
         sys.exit(1)
 
-    data_path = sys.argv[1]
-    ingest_data(data_path)
+    url = sys.argv[1]
+    ingest_data(url)
