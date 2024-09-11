@@ -107,3 +107,4 @@ cd simple-llmops-stack
 
 The web application provides a simple interface to view the ingested data stored in the pgvector database. It displays a list of the most recent documents, including their text content and metadata. This allows you to easily verify that your data ingestion process is working correctly and explore the stored information.
 
+Want a production-ready stack? Check out [helix.ml](https://helix.ml)
