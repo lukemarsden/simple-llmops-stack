@@ -103,7 +103,7 @@ cd simple-llmops-stack
    python app.py
    ```
 
-3. Open a web browser and navigate to `http://localhost:5000` to view the web interface.
+3. Open a web browser and navigate to [http://127.0.0.1:5000/](http://127.0.0.1:5000/) to view the web interface.
 
 The web application provides a simple interface to view the ingested data stored in the pgvector database. It displays a list of the most recent documents, including their text content and metadata. This allows you to easily verify that your data ingestion process is working correctly and explore the stored information.
 
